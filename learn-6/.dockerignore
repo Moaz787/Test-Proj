@@ -1,0 +1,14 @@
+node_modules
+dist
+.env
+.env.production
+.env.development
+.git
+.gitignore
+.dockerignore
+.vscode
+.idea
+*.log
+*.swp
+*.swo
+Microservices/Email/__pycache__

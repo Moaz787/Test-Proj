@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verification Code</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        background-color: #f5f5f5;
+        padding: 20px;
+        margin: 0;
+      }
+      h1 {
+        color: #007bff;
+      }
+      p {
+        margin: 10px 0;
+      }
+      .code {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .footer {
+        margin-top: 20px;
+        color: #666;
+      }
+      .footer p {
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body style="background-color: #f5f5f5; padding: 20px; border-radius: 10px">
+    <div>
+      <h1 style="color: #4caf50; margin-bottom: 20px"><%= subject %></h1>
+      <p style="color: #666; margin-bottom: 20px">Your code: <%= code %></p>
+      <p style="color: #666; margin-bottom: 20px">This code will expire in 1 hour</p>
+      <div style="margin-top: 20px; color: #666">
+        <p>Best regards,</p>
+        <p>Elevani Team</p>
+      </div>
+    </div>
+  </body>
+</html>

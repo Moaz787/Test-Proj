@@ -1,0 +1,76 @@
+services:
+  app:
+    build:
+      context: ./learn-6
+      dockerfile: Dockerfile
+    container_name: backend
+    restart: unless-stopped
+    environment:
+      - DB_HOST=postgres-db
+      - DB_PORT=5432
+      - DB_USERNAME=user
+      - DB_PASSWORD=624562
+      - DB_NAME=learn-6
+      - JWT_SECRET=kafjaksjfoje154646fesafesfaefea64f6ae4f684af68e
+      - NODE_ENV=development
+      - EMAIL_SERVICE_URL=http://python-mailer:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres-db
+      - python-mailer
+    networks:
+      - backend-network
+
+    volumes:
+      - ./learn-6:/app
+      - ./learn-6/node_modules:/app/node_modules
+      - ./learn-6/dist:/app/dist
+      - ./learn-6/uploads:/app/uploads
+
+  postgres-db:
+    image: postgres:16-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: "624562"
+      POSTGRES_DB: learn-6
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - backend-network
+
+  python-mailer:
+    container_name: mailer
+    build:
+      context: ./learn-6/Microservices/Email/
+    ports:
+      - "8000:8000"
+    networks:
+      - backend-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./learn-6/uploads:/app/uploads:ro
+      - ./Client:/usr/share/nginx/html:ro
+      - webroot:/var/www/html
+    depends_on:
+      - app
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge
+
+volumes:
+  postgres:
+  webroot:
