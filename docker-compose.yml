@@ -24,8 +24,8 @@ services:
 
     volumes:
       - ./Server:/app
-      - ./Server/node_modules:/app/node_modules
-      - ./Server/dist:/app/dist
+      # - ./Server/node_modules:/app/node_modules
+      # - ./Server/dist:/app/dist
       - ./Server/uploads:/app/uploads
 
   postgres-db:
