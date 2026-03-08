@@ -23,10 +23,10 @@ services:
       - backend-network
 
     volumes:
-      - ./Server:/app # ربط كود السيرفر
-      - /app/node_modules # (Anonymous Volume) عشان يحمي المكاتب اللي جوه الحاوية
-      - /app/dist # (Anonymous Volume) عشان يحمي ملفات الـ build اللي جوه الحاوية
-      - ./Server/uploads:/app/uploads # ربط مجلد الصور عشان تفضل موجودة
+      - ./Server:/app
+      - /app/node_modules
+      - /app/dist
+      - ./Server/uploads:/app/uploads
 
   postgres-db:
     image: postgres:16-alpine
@@ -59,9 +59,9 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro # ملف الإعدادات من الجذر
-      - ./Server/uploads:/app/uploads:ro # وصول Nginx للصور لعرضها
-      - ./Client:/usr/share/nginx/html:ro # ملفات الفرونت إند
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./Server/uploads:/app/uploads:ro
+      - ./Client:/usr/share/nginx/html:ro
     depends_on:
       - app
     networks:
