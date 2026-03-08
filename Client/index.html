@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test NestJS Connection</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f4f4f9;
+      }
+      .card {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      button {
+        background-color: #6200ee;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+      button:hover {
+        background-color: #3700b3;
+      }
+      #response {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>اختبار الاتصال بالباك إند</h1>
+      <button onclick="testConnection()">إرسال طلب (Hello World)</button>
+      <div id="response">اضغط على الزر للاختبار...</div>
+    </div>
+
+    <script>
+      async function testConnection() {
+        const responseDiv = document.getElementById("response");
+        responseDiv.innerText = "جاري التحميل...";
+
+        try {
+          const response = await fetch("/api/v1/");
+
+          if (!response.ok) throw new Error("حدث خطأ في السيرفر");
+
+          const data = await response.text();
+          responseDiv.style.color = "green";
+          responseDiv.innerText = `الرد من السيرفر: ${data}`;
+        } catch (error) {
+          responseDiv.style.color = "red";
+          responseDiv.innerText = `خطأ: ${error.message}`;
+          console.error(error);
+        }
+      }
+    </script>
+  </body>
+</html>
