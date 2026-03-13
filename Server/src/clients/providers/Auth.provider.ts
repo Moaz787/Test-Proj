@@ -87,33 +87,34 @@ export class AuthProvider {
       (user.EmailVerificationToken !== '' || user.EmailVerificationToken !== null) &&
       user.EmailVerificationTokenExpiry < new Date()
     ) {
-      if (!user.IsEmailVerified) {
-        const verificationLink = await this.commonService.generateVerificationLink(
-          user.id,
-          user.EmailVerificationToken,
-        );
+      const isPasswordMatched = await this.commonService.comparePassword(password, user.password);
+      if (!isPasswordMatched) throw new UnauthorizedException('Invalid credentials');
 
-        await this.mailService.sendVerificationEmail(
-          user.email,
-          verificationLink.MainVerificationLink,
-          user.EmailVerificationToken,
-        );
-        return { message: 'Verification email sent successfully' };
-      } else {
-        const isPasswordMatched = await this.commonService.comparePassword(password, user.password);
-        if (!isPasswordMatched) throw new UnauthorizedException('Invalid credentials');
+      if (!user.IsLoggedIn) user.IsLoggedIn = true;
 
-        if (!user.IsLoggedIn) user.IsLoggedIn = true;
+      const accessToken = await this.commonService.generateToken({
+        id: user.id,
+        IsLoggedIn: user.IsLoggedIn,
+        Role: user.Role,
+      });
 
-        const accessToken = await this.commonService.generateToken({
-          id: user.id,
-          IsLoggedIn: user.IsLoggedIn,
-          Role: user.Role,
-        });
+      user = await this.usersRepository.save(user);
+      return accessToken;
+    } else if (
+      !user.IsEmailVerified &&
+      user.EmailVerificationTokenExpiry > new Date() &&
+      (user.EmailVerificationToken !== '' || user.EmailVerificationToken !== null)
+    ) {
+      const verificationLink = await this.commonService.generateVerificationLink(user.id, user.EmailVerificationToken);
 
-        user = await this.usersRepository.save(user);
-        return accessToken;
-      }
+      await this.mailService.sendVerificationEmail(
+        user.email,
+        verificationLink.MainVerificationLink,
+        user.EmailVerificationToken,
+      );
+      return { message: 'Verification email sent successfully' };
+    } else {
+      throw new UnauthorizedException('Invalid credentials');
     }
   }
 

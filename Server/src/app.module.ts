@@ -30,6 +30,7 @@ import { OrdersModule } from './Orders/Orders.Module';
         password: '624562',
         database: config.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity.{js,ts}'],
+        autoLoadEntities: true,
         synchronize: true,
       }),
     }),

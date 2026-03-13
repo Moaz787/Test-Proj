@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ProductController } from './shop.controller';
 import { ProductService } from './shop.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -13,6 +13,6 @@ import { DeleterProvider } from './providers/Deleter.provider';
   imports: [TypeOrmModule.forFeature([Product, ProductImage])],
   controllers: [ProductController],
   providers: [ProductService, GettersProvider, CreatorsProvider, UpdatersProvider, DeleterProvider],
-  exports: [ProductService],
+  exports: [forwardRef(() => ProductService), TypeOrmModule],
 })
 export class ProductModule {}

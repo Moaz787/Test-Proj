@@ -1,23 +1,14 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsNotEmpty, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { CreateOrderItemDto } from './CreateOrderItem.dto';
 
 export class CreateOrderDto {
   @IsNotEmpty()
   @IsString()
-  country: string;
+  addressId: string;
 
-  @IsNotEmpty()
-  @IsString()
-  city: string;
-
-  @IsNotEmpty()
-  @IsString()
-  address: string;
-
-  @IsNotEmpty()
-  @IsNumber()
-  quantity: number;
-
-  @IsNotEmpty()
-  @IsString()
-  zipCode: string;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateOrderItemDto)
+  items: CreateOrderItemDto[];
 }

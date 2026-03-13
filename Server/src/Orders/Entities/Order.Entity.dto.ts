@@ -3,6 +3,7 @@ import { Product } from 'src/Shop/Entities/Product.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { OrderItem } from './OrderItem.Entity';
 import { Address } from './Address.Entity';
+import { CURRENT_TIMESTAMP } from 'src/utils/Constants';
 
 @Entity()
 export class Order {
@@ -19,7 +20,7 @@ export class Order {
   @Column()
   status: string;
 
-  @Column()
+  @Column({ type: 'timestamp', default: () => CURRENT_TIMESTAMP })
   createdAt: Date;
 
   @ManyToOne(() => User, user => user.orders)

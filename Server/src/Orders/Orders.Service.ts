@@ -24,31 +24,29 @@ export class OrdersService {
     return this.addressRepository.save(address);
   }
 
-  async createOrder(userId: string, productIds: string[], quantities: number[], addressId: string) {
+  async createOrder(userId: string, createOrderDto: CreateOrderDto) {
     let total = 0;
-    const items: OrderItem[] = [];
+    const orderItems: OrderItem[] = [];
 
-    for (let i = 0; i < productIds.length; i++) {
-      const product = await this.productRepository.findOneBy({ id: productIds[i] });
-      if (!product) throw new NotFoundException(`Product ${productIds[i]} not found`);
+    for (const item of createOrderDto.items) {
+      const product = await this.productRepository.findOneBy({ id: item.productId });
+      if (!product) throw new NotFoundException(`Product ${item.productId} not found`);
 
-      total += product.finalPrice * quantities[i];
+      total += product.finalPrice * item.quantity;
 
-      items.push(
-        Object.assign(new OrderItem(), {
-          product,
-          quantity: quantities[i],
-          priceAtPurchase: product.finalPrice,
-        }),
-      );
+      const orderItem = new OrderItem();
+      orderItem.product = product;
+      orderItem.quantity = item.quantity;
+      orderItem.priceAtPurchase = product.finalPrice;
+      orderItems.push(orderItem);
     }
 
     const newOrder = this.orderRepository.create({
       user: { id: userId } as any,
       totalPrice: total,
-      items: items,
+      items: orderItems,
       status: 'pending',
-      address: { id: addressId } as any,
+      address: { id: createOrderDto.addressId } as any,
     });
 
     const savedOrder = await this.orderRepository.save(newOrder);
