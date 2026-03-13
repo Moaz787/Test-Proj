@@ -9,6 +9,7 @@ import { CommonModule } from './common/common.module';
 import { MailModule } from './mail/mail.module';
 import { HttpModule } from '@nestjs/axios';
 import { ProductModule } from './Shop/shop.module';
+import { OrdersModule } from './Orders/Orders.Module';
 
 @Module({
   controllers: [AppController],
@@ -18,6 +19,7 @@ import { ProductModule } from './Shop/shop.module';
     CommonModule,
     MailModule,
     HttpModule,
+    OrdersModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

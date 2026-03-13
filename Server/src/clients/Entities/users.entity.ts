@@ -3,6 +3,7 @@ import { Role } from '../../utils/enums';
 
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Product } from 'src/Shop/Entities/Product.entity';
+import { Order } from 'src/Orders/Entities/Order.Entity.dto';
 
 @Entity({ name: 'Users' })
 export class User {
@@ -58,6 +59,9 @@ export class User {
 
   @OneToMany(() => Product, product => product.user)
   products: Product[];
+
+  @OneToMany(() => Order, order => order.user)
+  orders: Order[];
 
   @CreateDateColumn({
     type: 'timestamp',

@@ -12,6 +12,8 @@ import {
 } from 'typeorm';
 import { User } from 'src/clients/Entities/users.entity';
 import { ProductImage } from './ProducImages.entity';
+import { Order } from 'src/Orders/Entities/Order.Entity.dto';
+import { OrderItem } from 'src/Orders/Entities/OrderItem.Entity';
 
 @Entity()
 export class Product {
@@ -56,6 +58,9 @@ export class Product {
   @ManyToOne(() => User, user => user.products)
   @JoinColumn({ name: 'userId' })
   user: User;
+
+  @OneToMany(() => OrderItem, item => item.product, { cascade: true })
+  orderItems: OrderItem[];
 
   @CreateDateColumn({ type: 'timestamp', default: () => CURRENT_TIMESTAMP })
   createdAt: Date;

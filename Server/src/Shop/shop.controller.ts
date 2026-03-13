@@ -1,4 +1,4 @@
-import { Body, Controller, Get, InternalServerErrorException, Param, Post, Put, Query, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, InternalServerErrorException, Param, Post, Put, Query, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './shop.service';
 import { GetProductsFilterDto } from './DTOs/GetProductsFilter.dto';
 import { CreateProductDto } from './DTOs/CreateProduct.dto';
@@ -55,6 +55,17 @@ export class ProductController {
       return this.productService.updateProduct(id, productDto, user.id, files);
     } catch (error) {
       throw new InternalServerErrorException('Error updating product');
+    }
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard, AuthRoleGuard)
+  @UserRole(Role.SELLER)
+  deleteProduct(@Param('id') id: string, @CurrentUser() user: User) {
+    try {
+      return this.productService.deleteProduct(id, user.id);
+    } catch (error) {
+      throw new InternalServerErrorException('Error deleting product');
     }
   }
 }
