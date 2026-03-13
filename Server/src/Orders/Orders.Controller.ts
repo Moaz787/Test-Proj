@@ -8,10 +8,16 @@ import { AuthGuard } from 'src/Guards/auth.guard';
 import { AuthRoleGuard } from 'src/Guards/auth-role.guard';
 import { Role } from 'src/utils/enums';
 import { UserRole } from 'src/decorators/auth-role.decorator';
+import { Get } from '@nestjs/common';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly orderService: OrdersService) {}
+
+  @Get('all')
+  async getAllOrders() {
+    return this.orderService.getAllOrders();
+  }
 
   @Post('address')
   async CreateAddress(@Body() createAddressDto: CreateAddressDto) {

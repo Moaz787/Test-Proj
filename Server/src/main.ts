@@ -6,7 +6,9 @@ import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.enableCors();
+  app.enableCors({
+    origin: '*',
+  });
   app.setGlobalPrefix('api/v1');
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
     prefix: '/public/',

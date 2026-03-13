@@ -7,6 +7,7 @@ import { OrderItem } from './Entities/OrderItem.Entity';
 import { CreateOrderDto } from './DTOs/CreateOrder.dto';
 import { CreateAddressDto } from './DTOs/CreateAddress.dto';
 import { Address } from './Entities/Address.Entity';
+import { OrdersGateway } from './Orders.gateway';
 
 @Injectable()
 export class OrdersService {
@@ -17,7 +18,17 @@ export class OrdersService {
     private readonly productRepository: Repository<Product>,
     @InjectRepository(Address)
     private readonly addressRepository: Repository<Address>,
+    private readonly ordersGateway: OrdersGateway,
   ) {}
+
+  async getAllOrders() {
+    return this.orderRepository.find({
+      relations: ['items', 'items.product', 'user', 'address'],
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+  }
 
   async createAddress(addressData: CreateAddressDto) {
     const address = this.addressRepository.create(addressData);
@@ -50,6 +61,8 @@ export class OrdersService {
     });
 
     const savedOrder = await this.orderRepository.save(newOrder);
+
+    this.ordersGateway.SendNewOrderNotification(savedOrder);
 
     return { message: 'Order created successfully', order: savedOrder };
   }
