@@ -18,13 +18,17 @@ import { Role } from 'src/utils/enums';
 import { UserRole } from 'src/decorators/auth-role.decorator';
 import { Get } from '@nestjs/common';
 import Stripe from 'stripe';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly orderService: OrdersService) {}
+  constructor(
+    private readonly orderService: OrdersService,
+    private readonly configService: ConfigService,
+  ) {}
 
   private stripe = new Stripe(
-    'sk_test_51TAfFx3sfSvpeoCg8rhe4ltKRHc3GYcHNeJQfrqzfibBhlyo92A4MCZM8JKQvRki3LzOYfiC63OXBEivWibOw9u900IrJgdY5A',
+    this.configService.get('STRIPE_SECRET_KEY'),
     {
       apiVersion: '2025-11-17.clover' as any,
     },
@@ -49,12 +53,10 @@ export class OrdersController {
 
   @Post('webhook')
   async handleStripeWebhook(@Headers('stripe-signature') sig: string, @Req() req: any) {
-    const endpointSecret = 'whsec_5761b7151482e6a76c11e0d1838eea0bb1e4cf7afde4e9c9b28c55388c817e38';
-
     let event;
 
     try {
-      event = this.stripe.webhooks.constructEvent(req.rawBody, sig, endpointSecret);
+      event = this.stripe.webhooks.constructEvent(req.rawBody, sig, this.configService.get('STRIPE_WEBHOOK_SECRET'));
 
       if (event.type === 'checkout.session.completed') {
         const session = event.data.object as any;
