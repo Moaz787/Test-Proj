@@ -11,9 +11,11 @@ services:
       - DB_USERNAME=user
       - DB_PASSWORD=624562
       - DB_NAME=learn-6
-      - JWT_SECRET=kafjaksjfoje154646fesafesfaefea64f6ae4f684af68e
       - NODE_ENV=development
       - EMAIL_SERVICE_URL=http://python-mailer:8000
+      - JWT_SECRET=kafjaksjfoje154646fesafesfaefea64f6ae4f684af68e
+      - STRIPE_WEBHOOK_SECRET=whsec_5761b7151482e6a76c11e0d1838eea0bb1e4cf7afde4e9c9b28c55388c817e38
+      - STRIPE_SECRET_KEY=sk_test_51TAfFx3sfSvpeoCg8rhe4ltKRHc3GYcHNeJQfrqzfibBhlyo92A4MCZM8JKQvRki3LzOYfiC63OXBEivWibOw9u900IrJgdY5A
     ports:
       - "3000:3000"
     depends_on:
@@ -63,6 +65,8 @@ services:
       - ./Server/uploads:/app/uploads:ro
       - ./Client/Shop:/usr/share/nginx/html/shop
       - ./Client/Admin:/usr/share/nginx/html/admin
+      - ./Client/Success:/usr/share/nginx/html/success
+      - ./Client/Cancel:/usr/share/nginx/html/cancel
     depends_on:
       - app
     networks:
