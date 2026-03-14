@@ -20,6 +20,9 @@ export class Order {
   @Column()
   status: string;
 
+  @Column()
+  PaymentStatus: string;
+
   @Column({ type: 'timestamp', default: () => CURRENT_TIMESTAMP })
   createdAt: Date;
 

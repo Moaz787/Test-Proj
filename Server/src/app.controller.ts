@@ -9,4 +9,14 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Get('success')
+  getSuccess(): string {
+    return 'Payment Success';
+  }
+
+  @Get('cancel')
+  getCancel(): string {
+    return 'Payment Cancel';
+  }
 }
